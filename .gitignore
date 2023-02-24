@@ -1,0 +1,16 @@
+.*
+!/.github/
+!/.gitattributes
+!/.gitignore
+
+## Build generated
+build/
+DerivedData/
+/MacKernelSDK
+
+## Other
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+.DS_Store

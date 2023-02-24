@@ -1,0 +1,50 @@
+name: XCode Build
+on:
+  # Skips build process for changes to only **docs** or **.github** directories.
+  push:
+    branches:
+      - 'main'
+    paths:
+      - '!.github/**'
+      - '!docs/**'
+      - '!.gitattributes'
+      - '!.gitignore'
+      - 'VoodooInjector'
+      - 'VoodooInjector.xcodeproj'
+  # Enables trigger for pull requests when making changes to xcode project files.
+  pull_request:
+    branches:
+      - 'main'
+      - 'development'
+    paths:
+      - 'VoodooInjector'
+      - 'VoodooInjector.xcodeproj'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      # Fetches remote repository without --progress option.
+      #
+      # The default behavior of @actions/checkout outputs many noisy lines of
+      # status output in the workflow log, which is problematic for log size.
+      #
+      # Refer to the below PR for updates on this issue:
+      # - https://github.com/actions/checkout/pull/1067
+      - name: Checkout latest repository commit
+        # uses: actions/checkout@v3
+        uses: simonbaird/checkout@no-progress-option
+        with:
+          show-progress: false
+    # - name: Debug Build
+    #   run: |
+    #     xcodebuild -alltargets -configuration Debug | xcpretty && exit ${PIPESTATUS[0]}
+    - name: Release Build
+      run: |
+        xcodebuild -alltargets -configuration Release | xcpretty && exit ${PIPESTATUS[0]}
+    - name: Upload to Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ github.event.repository.name }}
+        path: build/*/*.zip
+        if-no-files-found: error
