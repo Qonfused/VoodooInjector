@@ -53,9 +53,11 @@ jobs:
       - name: Debug Build
         run: |
           xcodebuild -configuration Debug | xcpretty && exit ${PIPESTATUS[0]}
+          zip -r -X build/Debug/VoodooInjector.zip build/Debug/*.kext
       - name: Release Build
         run: |
           xcodebuild -configuration Release | xcpretty && exit ${PIPESTATUS[0]}
+          zip -r -X build/Release/VoodooInjector.zip build/Release/*.kext
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v3
         with:
