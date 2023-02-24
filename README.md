@@ -1,13 +1,6 @@
 <h1 align="center">VoodooInjector</h1>
 <br>
 <p align="center">
-  <!-- <img
-      src="https://raw.githubusercontent.com/Qonfused/ASUS-ZenBook-Duo-14-UX481-Hackintosh/main/docs/assets/README/UX481.png"
-      alt="UX481FL"
-      class="center"
-      width=500px
-    >
-  <br> -->
   A <a href="https://github.com/VoodooI2C/VoodooI2C">VoodooI2C</a> injector for the <b>ASUS ZenBook Duo 14"</b> and <b>Asus Zenbook Pro Duo 15"</b> laptops.
 </p>
 
@@ -226,6 +219,9 @@ from the original entry to match to the corresponding VoodooI2CHID driver.
 - Refer to [VoodooI2C#474 issue comment](https://github.com/VoodooI2C/VoodooI2C/issues/474#issuecomment-966665616) from [gvkt](https://github.com/gvkt) and [VoodooI2CHID#59 PR](https://github.com/VoodooI2C/VoodooI2CHID/pull/59) describing architectural issues in more depth.
 - Refer to [VoodooI2C#485 issue](https://github.com/VoodooI2C/VoodooI2C/issues/485) for a basic explanation of VoodooI2C's IOKit matching behavior.
 - Refer to [ASUS-ZenBook-Duo-14-UX481-Hackintosh#12 issue](https://github.com/Qonfused/ASUS-ZenBook-Duo-14-UX481-Hackintosh/issues/12) in regards to the Info.plist changes alongside GPIO pinning (changes are to match drivers to device-specific product ids rather than device names).
+
+## ⚖️ License
+[BSD 3-Clause License](/LICENSE).
 
 ## 🌟 Credits
 - [@gvkt](https://github.com/gvkt), and [@1Revenger1](https://github.com/1Revenger1/) for their work on better supporting multi-touchscreen devices with VoodooI2CHID.
