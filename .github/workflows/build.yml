@@ -50,9 +50,9 @@ jobs:
         uses: simonbaird/checkout@no-progress-option
         with:
           show-progress: false
-    # - name: Debug Build
-    #   run: |
-    #     xcodebuild -alltargets -configuration Debug | xcpretty && exit ${PIPESTATUS[0]}
+    - name: Debug Build
+      run: |
+        xcodebuild -alltargets -configuration Debug | xcpretty && exit ${PIPESTATUS[0]}
     - name: Release Build
       run: |
         xcodebuild -alltargets -configuration Release | xcpretty && exit ${PIPESTATUS[0]}
