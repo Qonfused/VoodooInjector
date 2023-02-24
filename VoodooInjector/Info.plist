@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleGetInfoString</key>
+	<string>VoodooI2C injector for Zenbook Duos</string>
 	<key>IOKitPersonalities</key>
 	<dict>
 		<key>ELAN1207 Precision Touchpad HID Event Driver</key>
@@ -19,10 +21,10 @@
 			</array>
 			<key>IOClass</key>
 			<string>VoodooI2CPrecisionTouchpadHIDEventDriver</string>
-			<key>IOProbeScore</key>
-			<integer>1000</integer>
 			<key>IOPCIMatch</key>
 			<string>0x310e04f3</string>
+			<key>IOProbeScore</key>
+			<integer>1000</integer>
 			<key>IOProviderClass</key>
 			<string>IOHIDInterface</string>
 			<key>ProcessBluetoothMouseStopsTrackpad</key>
