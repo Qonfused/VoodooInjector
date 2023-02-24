@@ -6,7 +6,7 @@ on:
       - 'main'
     paths:
       - '!.github/**'
-      - '!docs/**'
+      - '!README.md'
       - '!.gitattributes'
       - '!.gitignore'
       - 'VoodooInjector'
@@ -20,8 +20,22 @@ on:
       - 'VoodooInjector'
       - 'VoodooInjector.xcodeproj'
   workflow_dispatch:
+# Cancel concurrent builds within the same PR.
+#
+# Push events made within the execution window of a prior commit's build will be
+# interpreted as hot-patches, and will cancel the previous build. This will
+# update the pull request's status check for this workflow to instead pull from
+# the new commit's changes instead.
+#
+# Refer to the GitHub docs page for more information on this topic:
+# * https://docs.github.com/en/actions/using-jobs/using-concurrency
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
+    name: Run XCode Build
+    timeout-minutes: 1
     runs-on: macos-latest
     steps:
       # Fetches remote repository without --progress option.
