@@ -60,8 +60,12 @@ jobs:
         shell: bash
         run: |
           while read -r path; do
-            cfg=$(basename ${path%/*})
+            # Delete CFBundleExecutable key
             bin=$(basename $path .kext)
+            /usr/libexec/PlistBuddy \
+              -c 'Delete :CFBundleExecutable' $bin.kext/Contents/Info.plist
+            # Zip kext
+            cfg=$(basename ${path%/*})
             cd build/$cfg && zip -r -X ../$bin-$cfg.zip $bin.kext
           done <<< "$(find build/*/*.kext -maxdepth 0 -type d)"
       - name: Upload to Artifacts
