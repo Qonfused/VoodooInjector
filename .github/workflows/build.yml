@@ -53,14 +53,30 @@ jobs:
       - name: Debug Build
         run: |
           xcodebuild -configuration Debug | xcpretty && exit ${PIPESTATUS[0]}
-          zip -r -X build/Debug/VoodooInjector.zip build/Debug/*.kext
-      - name: Release Build
+      # - name: Release Build
+      #   run: |
+      #     xcodebuild -configuration Release | xcpretty && exit ${PIPESTATUS[0]}
+      # - name: Prepare Artifacts
+      #   shell: bash
+      #   run: |
+      #     mkdir -p dist/
+      #     while read -r path; do
+      #       cfg=$(basename ${path%/*})
+      #       bin=$(basename $path .kext)
+      #       zip -r -X dist/$bin-$cfg.zip $path
+      #     done <<< "$(find build/*/*.kext -maxdepth 0 -type d)"
+      - name: Prepare Artifacts
+        shell: bash
         run: |
-          xcodebuild -configuration Release | xcpretty && exit ${PIPESTATUS[0]}
-          zip -r -X build/Release/VoodooInjector.zip build/Release/*.kext
+          mkdir -p dist/
+          while read -r path; do
+            cfg=$(basename ${path%/*})
+            bin=$(basename $path .kext)
+            zip -r -X dist/$bin.zip $path
+          done <<< "$(find build/*/*.kext -maxdepth 0 -type d)"
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ github.event.repository.name }}
-          path: build/*/*.zip
+          path: dist/*.zip
           if-no-files-found: error
