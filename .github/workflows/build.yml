@@ -68,7 +68,7 @@ jobs:
             /usr/libexec/PlistBuddy \
               -c 'Delete :CFBundleExecutable' $bin.kext/Contents/Info.plist
             # Zip kext
-            cd build/$cfg && zip -r -X ../$bin-$cfg.zip $bin.kext
+            zip -r -X ../$bin-$cfg.zip $bin.kext
           done <<< "$(find build/*/*.kext -maxdepth 0 -type d)"
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v3
