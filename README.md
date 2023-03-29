@@ -12,12 +12,32 @@
 
 </div>
 
+## ⚡Quick Links
+
+- [Getting Started](#-getting-started)
+  - [Background](#background)
+  - [Gathering device info](#gathering-device-info)
+    - [Windows Instructions](#windows-instructions)
+      - [Finding device identifiers](#finding-device-identifiers)
+    - [macOS Instructions](#macos-instructions)
+      - [Finding product and vendor ids](#finding-product-and-vendor-ids)
+      - [Checking device identifiers](#checking-device-identifiers)
+  - [Modifying VoodooI2CHID IOKitPersonalities](#modifying-voodooi2chid-iokitpersonalities)
+    - [Single Device](#single-device)
+    - [Multiple Devices](#multiple-devices)
+  - [Adding new IOKitPersonalities to VoodooInjector](#adding-new-iokitpersonalities-to-voodooinjector)
+- [Resources](#-resources)
+- [License](#%EF%B8%8F-license)
+- [Credits](#-credits)
+
+## ✨ Getting Started
+
 This kext resolves an architecture incompatibility in VoodooI2CHID applicable to
 laptops with multiple I2C-HID devices (e.g. trackpad/screenpad and touchscreen).
 While this kext is primarily focused on supporting ASUS Zenbook Duo laptops, it
 is also applicable to other ASUS screenpad devices.
 
-## Background
+### Background
 
 VoodooI2CHID comes with multiple types of IOKit personalities or drivers (e.g. Generic Mouse, Precision Touchpad, Stylus, Touchscreen, etc). These drivers attach to a device based on a IOProbeScore property for each event driver in the kext's Info.plist, which sets the priority score for ordering which IOKit personalities attach to I2C-HID devices first. The precision trackpad event driver can be configured to attach first before any other event drivers, enabling multi-touch gestures on the trackpad by default.
 
@@ -25,15 +45,14 @@ This works fine when addressing a single I2C-HID device like a trackpad, as the 
 
 The workaround is to edit the Info.plist for the VoodooI2CHID kext to force specific drivers to match specific devices based on their product and vendor IDs. By default, most event drivers' `IOPropertyMatch` keys specify the event driver to attach to any device using the I2C transport, but they can also be configured to match only a specific device by matching against it's specific product ID or vendor ID. This only allows for a match for a single device, but for multiple devices you can use the `IOPCIMatch` key instead.
 
-## Gathering device info
-
-### Windows Instructions
-
-#### Finding device identifiers
+### Gathering device info
 
 If you're unfamiliar with what I2C HID devices your system has, you'll want to
-follow these instructions first, and then proceed with the macOS instructions.
+follow the Windows instructions first, and then proceed with the macOS instructions.
 
+#### Windows Instructions
+
+##### Finding device identifiers
 First open Device Manager and look for any `I2C HID Device` entries under 'Human
 Interface Devices'. For each entry, right click on it and select 'properties'.
 Then navigate to the 'Details' tab and select the 'Hardware Ids' property from
@@ -59,9 +78,9 @@ Trackpad | `ELAN1207`
 Touchscreen - Primary Display | `ELAN9008`
 Touchscreen - Screenpad Plus | `ELAN9009`
 
-### macOS Instructions
+#### macOS Instructions
 
-#### Finding product and vendor ids
+##### Finding product and vendor ids
 
 You'll first need to grab your devices' product and vendor ids by running the
 below command in Terminal:
@@ -99,7 +118,7 @@ $ ioreg -rxn IOHIDInterface -k "VoodooI2CServices Supported" -t | grep -E 'IOACP
 device. You can use this command again later to double-check that the correct
 event drivers are being attached to the correct devices.
 
-#### Checking device identifiers
+##### Checking device identifiers
 
 You may also wish to verify the devices' identifiers for identifying which
 device is which. Use the device's ACPI name (e.g. `ETPD`, `TPL0`, `TPL1`) from
@@ -130,14 +149,14 @@ Touchscreen - Screenpad Plus | `ELAN9009` | `\_SB.PCI0.I2C3.TPL0` | `04F3` | `29
 Once you have the vendor and product id for each device, proceed with the next
 step.
 
-## Modifying VoodooI2CHID IOKitPersonalities
+### Modifying VoodooI2CHID IOKitPersonalities
 
 For each event driver of interest, you'll want to make either of the two changes
 below. In our example for the Zenbook Duo, we use both the `IOPropertyMatch` and
 `IOPCIMatch` keys to match against a single device and multiple devices
 respectively.
 
-### Single Device
+#### Single Device
 
 In the case of the trackpad device in our example, we use the `ProductId` key
 under `IOPropertyMatch` to specify our trackpad's product id. You'll want to
@@ -161,7 +180,7 @@ apply the below changes:
 309      | <\dict> -->
 ```
 
-### Multiple devices
+#### Multiple Devices
 
 In the case of the touchscreen devices in our example, we use the `IOPCIMatch`
 key for multiple values. The structure for each value is `0x<product-id><vendor id>`
@@ -197,7 +216,7 @@ You may want to also remove any existing `IOPropertyMatch` keys if they exist:
 [-] 362  | </dict>
 ```
 
-## Adding new IOKitPersonalities to VoodooInjector
+### Adding new IOKitPersonalities to VoodooInjector
 
 To add new IOKitPersonalities to VoodooInjector, you can simply copy the entry
 you've modified in VoodooI2CHID and add it as a new entry under VoodooInjector's
@@ -214,7 +233,7 @@ IOKitPersonalities:
 You'll need to preserve the same `CFBundleIdentifier` and `IOClass` properties
 from the original entry to match to the corresponding VoodooI2CHID driver.
 
-## Resources
+## 📚 Resources
 
 - Refer to [VoodooI2C#474 issue comment](https://github.com/VoodooI2C/VoodooI2C/issues/474#issuecomment-966665616) from [gvkt](https://github.com/gvkt) and [VoodooI2CHID#59 PR](https://github.com/VoodooI2C/VoodooI2CHID/pull/59) describing architectural issues in more depth.
 - Refer to [VoodooI2C#485 issue](https://github.com/VoodooI2C/VoodooI2C/issues/485) for a basic explanation of VoodooI2C's IOKit matching behavior.
